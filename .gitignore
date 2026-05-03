@@ -46,3 +46,11 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
+
+# local db
+*.db
+*.sqlite
+
+# logs
+logs/
+*.log
