@@ -8,6 +8,24 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 import os
 
+from models import (
+    PredictPriorityRequest,
+    PredictPriorityResponse,
+    GenerateScheduleRequest,
+    GenerateScheduleResponse,
+    LearnHabitsRequest,
+    LearnHabitsResponse,
+    DetectProcrastinationRequest,
+    DetectProcrastinationResponse,
+    DailySummaryRequest,
+    DailySummaryResponse,
+    BurnoutCheckRequest,
+    BurnoutCheckResponse,
+)
+from priority_engine import predict_priority
+from schedule_engine import generate_schedule
+from habit_engine import learn_habits
+
 app = FastAPI(
     title="Smart Task Prioritizer AI Service",
     description="AI engine for priority scoring, smart scheduling, habit learning, and productivity insights.",
@@ -43,41 +61,73 @@ async def health_check():
     return {"status": "healthy", "service": "ai-engine", "version": "0.1.0"}
 
 
-# --- Placeholder endpoints (to be implemented in Phase 5) ---
+# ============================================================
+# Task 37 — Priority Prediction
+# ============================================================
 
-@app.post("/predict-priority")
-async def predict_priority(api_key: str = Depends(verify_api_key)):
-    """Predict priority score for a task. (Phase 5 - Task 37)"""
-    return {"message": "Not yet implemented", "endpoint": "/predict-priority"}
+@app.post("/predict-priority", response_model=PredictPriorityResponse)
+async def predict_priority_endpoint(
+    request: PredictPriorityRequest,
+    api_key: str = Depends(verify_api_key),
+):
+    """Predict priority score for a task using Weighted Scoring Algorithm."""
+    return predict_priority(request)
 
 
-@app.post("/generate-schedule")
-async def generate_schedule(api_key: str = Depends(verify_api_key)):
-    """Generate a smart daily schedule. (Phase 5 - Task 38)"""
-    return {"message": "Not yet implemented", "endpoint": "/generate-schedule"}
+# ============================================================
+# Task 38 — Schedule Generation
+# ============================================================
+
+@app.post("/generate-schedule", response_model=GenerateScheduleResponse)
+async def generate_schedule_endpoint(
+    request: GenerateScheduleRequest,
+    api_key: str = Depends(verify_api_key),
+):
+    """Generate a smart daily schedule with energy-aware time blocking."""
+    return generate_schedule(request)
 
 
-@app.post("/learn-habits")
-async def learn_habits(api_key: str = Depends(verify_api_key)):
-    """Analyze user habits and productivity patterns. (Phase 5 - Task 39)"""
-    return {"message": "Not yet implemented", "endpoint": "/learn-habits"}
+# ============================================================
+# Task 39 — Habit Learning
+# ============================================================
 
+@app.post("/learn-habits", response_model=LearnHabitsResponse)
+async def learn_habits_endpoint(
+    request: LearnHabitsRequest,
+    api_key: str = Depends(verify_api_key),
+):
+    """Analyze user habits using K-Means clustering + time-series analysis."""
+    return learn_habits(request)
+
+
+# ============================================================
+# Tasks 40–42 — Placeholder endpoints (next session)
+# ============================================================
 
 @app.post("/detect-procrastination")
-async def detect_procrastination(api_key: str = Depends(verify_api_key)):
-    """Detect procrastination patterns. (Phase 5 - Task 40)"""
+async def detect_procrastination_endpoint(
+    request: DetectProcrastinationRequest,
+    api_key: str = Depends(verify_api_key),
+):
+    """Detect procrastination patterns. (To be implemented)"""
     return {"message": "Not yet implemented", "endpoint": "/detect-procrastination"}
 
 
 @app.post("/daily-summary")
-async def daily_summary(api_key: str = Depends(verify_api_key)):
-    """Generate daily AI summary. (Phase 5 - Task 41)"""
+async def daily_summary_endpoint(
+    request: DailySummaryRequest,
+    api_key: str = Depends(verify_api_key),
+):
+    """Generate daily AI summary. (To be implemented)"""
     return {"message": "Not yet implemented", "endpoint": "/daily-summary"}
 
 
 @app.post("/burnout-check")
-async def burnout_check(api_key: str = Depends(verify_api_key)):
-    """Check for burnout risk. (Phase 5 - Task 42)"""
+async def burnout_check_endpoint(
+    request: BurnoutCheckRequest,
+    api_key: str = Depends(verify_api_key),
+):
+    """Check for burnout risk. (To be implemented)"""
     return {"message": "Not yet implemented", "endpoint": "/burnout-check"}
 
 
