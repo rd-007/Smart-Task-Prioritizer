@@ -25,6 +25,9 @@ from models import (
 from priority_engine import predict_priority
 from schedule_engine import generate_schedule
 from habit_engine import learn_habits
+from procrastination_engine import detect_procrastination
+from summary_engine import generate_daily_summary
+from burnout_engine import check_burnout
 
 app = FastAPI(
     title="Smart Task Prioritizer AI Service",
@@ -44,7 +47,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- API Key Auth ---
+# --- API Key Auth (Task 43) ---
 API_KEY = os.getenv("AI_SERVICE_API_KEY", "dev-api-key-change-in-production")
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
@@ -101,34 +104,42 @@ async def learn_habits_endpoint(
 
 
 # ============================================================
-# Tasks 40–42 — Placeholder endpoints (next session)
+# Task 40 — Procrastination Detection
 # ============================================================
 
-@app.post("/detect-procrastination")
+@app.post("/detect-procrastination", response_model=DetectProcrastinationResponse)
 async def detect_procrastination_endpoint(
     request: DetectProcrastinationRequest,
     api_key: str = Depends(verify_api_key),
 ):
-    """Detect procrastination patterns. (To be implemented)"""
-    return {"message": "Not yet implemented", "endpoint": "/detect-procrastination"}
+    """Detect procrastination patterns and generate personalized nudges."""
+    return detect_procrastination(request)
 
 
-@app.post("/daily-summary")
+# ============================================================
+# Task 41 — Daily Summary
+# ============================================================
+
+@app.post("/daily-summary", response_model=DailySummaryResponse)
 async def daily_summary_endpoint(
     request: DailySummaryRequest,
     api_key: str = Depends(verify_api_key),
 ):
-    """Generate daily AI summary. (To be implemented)"""
-    return {"message": "Not yet implemented", "endpoint": "/daily-summary"}
+    """Generate a concise daily briefing with top tasks and insights."""
+    return generate_daily_summary(request)
 
 
-@app.post("/burnout-check")
+# ============================================================
+# Task 42 — Burnout Check
+# ============================================================
+
+@app.post("/burnout-check", response_model=BurnoutCheckResponse)
 async def burnout_check_endpoint(
     request: BurnoutCheckRequest,
     api_key: str = Depends(verify_api_key),
 ):
-    """Check for burnout risk. (To be implemented)"""
-    return {"message": "Not yet implemented", "endpoint": "/burnout-check"}
+    """Evaluate burnout risk from workload signals."""
+    return check_burnout(request)
 
 
 if __name__ == "__main__":
