@@ -25,23 +25,36 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+// Types
+interface Task {
+  id: string;
+  title: string;
+  category: "WORK" | "STUDY" | "PERSONAL";
+  priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  status: "TODO" | "IN_PROGRESS" | "DONE";
+  deadline: string | null;
+  estimatedDuration: number;
+  energyLevel: "LOW" | "MEDIUM" | "HIGH";
+  priorityScore: number | null;
+}
+
 // Mock data
-const allTasks = [
-  { id: "1", title: "Review Pull Requests", category: "WORK" as const, priority: "CRITICAL" as const, status: "TODO" as const, deadline: new Date(Date.now() + 2 * 3600000).toISOString(), estimatedDuration: 30, energyLevel: "HIGH" as const, priorityScore: 91 },
-  { id: "2", title: "Prepare Q2 Marketing Report", category: "WORK" as const, priority: "HIGH" as const, status: "IN_PROGRESS" as const, deadline: new Date(Date.now() + 6 * 3600000).toISOString(), estimatedDuration: 45, energyLevel: "MEDIUM" as const, priorityScore: 82 },
-  { id: "3", title: "Team standup meeting", category: "WORK" as const, priority: "MEDIUM" as const, status: "TODO" as const, deadline: new Date(Date.now() + 3 * 3600000).toISOString(), estimatedDuration: 15, energyLevel: "LOW" as const, priorityScore: 67 },
-  { id: "4", title: "Study Machine Learning Ch.5", category: "STUDY" as const, priority: "MEDIUM" as const, status: "TODO" as const, deadline: new Date(Date.now() + 24 * 3600000).toISOString(), estimatedDuration: 60, energyLevel: "HIGH" as const, priorityScore: 56 },
-  { id: "5", title: "Update portfolio website", category: "PERSONAL" as const, priority: "MEDIUM" as const, status: "TODO" as const, deadline: new Date(Date.now() + 144 * 3600000).toISOString(), estimatedDuration: 90, energyLevel: "MEDIUM" as const, priorityScore: 44 },
-  { id: "6", title: "Buy groceries", category: "PERSONAL" as const, priority: "LOW" as const, status: "DONE" as const, deadline: null, estimatedDuration: 20, energyLevel: "LOW" as const, priorityScore: 23 },
-  { id: "7", title: "Write blog post about React Server Components", category: "WORK" as const, priority: "MEDIUM" as const, status: "TODO" as const, deadline: new Date(Date.now() + 72 * 3600000).toISOString(), estimatedDuration: 120, energyLevel: "HIGH" as const, priorityScore: 51 },
-  { id: "8", title: "Fix CSS layout bug on landing page", category: "WORK" as const, priority: "HIGH" as const, status: "IN_PROGRESS" as const, deadline: new Date(Date.now() + 12 * 3600000).toISOString(), estimatedDuration: 30, energyLevel: "MEDIUM" as const, priorityScore: 74 },
+const allTasks: Task[] = [
+  { id: "1", title: "Review Pull Requests", category: "WORK", priority: "CRITICAL", status: "TODO", deadline: new Date(Date.now() + 2 * 3600000).toISOString(), estimatedDuration: 30, energyLevel: "HIGH", priorityScore: 91 },
+  { id: "2", title: "Prepare Q2 Marketing Report", category: "WORK", priority: "HIGH", status: "IN_PROGRESS", deadline: new Date(Date.now() + 6 * 3600000).toISOString(), estimatedDuration: 45, energyLevel: "MEDIUM", priorityScore: 82 },
+  { id: "3", title: "Team standup meeting", category: "WORK", priority: "MEDIUM", status: "TODO", deadline: new Date(Date.now() + 3 * 3600000).toISOString(), estimatedDuration: 15, energyLevel: "LOW", priorityScore: 67 },
+  { id: "4", title: "Study Machine Learning Ch.5", category: "STUDY", priority: "MEDIUM", status: "TODO", deadline: new Date(Date.now() + 24 * 3600000).toISOString(), estimatedDuration: 60, energyLevel: "HIGH", priorityScore: 56 },
+  { id: "5", title: "Update portfolio website", category: "PERSONAL", priority: "MEDIUM", status: "TODO", deadline: new Date(Date.now() + 144 * 3600000).toISOString(), estimatedDuration: 90, energyLevel: "MEDIUM", priorityScore: 44 },
+  { id: "6", title: "Buy groceries", category: "PERSONAL", priority: "LOW", status: "DONE", deadline: null, estimatedDuration: 20, energyLevel: "LOW", priorityScore: 23 },
+  { id: "7", title: "Write blog post about React Server Components", category: "WORK", priority: "MEDIUM", status: "TODO", deadline: new Date(Date.now() + 72 * 3600000).toISOString(), estimatedDuration: 120, energyLevel: "HIGH", priorityScore: 51 },
+  { id: "8", title: "Fix CSS layout bug on landing page", category: "WORK", priority: "HIGH", status: "IN_PROGRESS", deadline: new Date(Date.now() + 12 * 3600000).toISOString(), estimatedDuration: 30, energyLevel: "MEDIUM", priorityScore: 74 },
 ];
 
 type StatusFilter = "ALL" | "TODO" | "IN_PROGRESS" | "DONE";
 type SortOption = "priorityScore" | "deadline" | "createdAt";
 
 export default function TasksPage() {
-  const [tasks, setTasks] = useState(allTasks);
+  const [tasks, setTasks] = useState<Task[]>(allTasks);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("ALL");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
   const [sortBy, setSortBy] = useState<SortOption>("priorityScore");
@@ -87,7 +100,7 @@ export default function TasksPage() {
   const handleComplete = (id: string) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === id ? { ...t, status: t.status === "DONE" ? ("TODO" as const) : ("DONE" as const) } : t
+        t.id === id ? { ...t, status: (t.status === "DONE" ? "TODO" : "DONE") as Task["status"] } : t
       )
     );
   };
