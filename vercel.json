@@ -4,7 +4,6 @@
   "buildCommand": "npx prisma generate && next build",
   "outputDirectory": ".next",
   "regions": ["bom1"],
-  "ignoreCommand": "echo 0",
   "headers": [
     {
       "source": "/api/(.*)",
