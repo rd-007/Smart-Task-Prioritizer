@@ -36,12 +36,14 @@ app = FastAPI(
 )
 
 # --- CORS ---
+# Allow localhost for dev + production origins from env
+_default_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+_extra_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+_all_origins = _default_origins + [o.strip() for o in _extra_origins if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=_all_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -144,4 +146,5 @@ async def burnout_check_endpoint(
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
